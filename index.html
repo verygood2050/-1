@@ -86,6 +86,9 @@
       const [showQuizAnswer, setShowQuizAnswer] = useState(false);
       const [dailyHistory, setDailyHistory] = useState({});
       const [encouragementMsg, setEncouragementMsg] = useState('');
+      const [showDeleteModal, setShowDeleteModal] = useState(false);
+      const [selectedForDelete, setSelectedForDelete] = useState(new Set());
+      const [deleteMode, setDeleteMode] = useState('single'); // 'single' or 'multi'
 
       const STORAGE_KEYS = { verses: 'bibleMemoryVerses', counts: 'bibleMemoryCounts', history: 'bibleDailyHistory' };
 
@@ -372,11 +375,58 @@
       const handleDeleteCard = () => {
         const newVerses = {...verses};
         delete newVerses[selectedCard];
+        const newCounts = {...counts};
+        delete newCounts[selectedCard];
         setVerses(newVerses);
+        setCounts(newCounts);
         const remainingKeys = Object.keys(newVerses).sort();
         if (remainingKeys.length > 0) setSelectedCard(remainingKeys[0]);
         setShowDeleteConfirm(false);
+        setShowDeleteModal(false);
         notify('✅ 삭제 완료');
+      };
+
+      const handleDeleteSelected = () => {
+        if (selectedForDelete.size === 0) {
+          notify('⚠️ 삭제할 카드를 선택해주세요');
+          return;
+        }
+        const newVerses = {...verses};
+        const newCounts = {...counts};
+        selectedForDelete.forEach(key => {
+          delete newVerses[key];
+          delete newCounts[key];
+        });
+        setVerses(newVerses);
+        setCounts(newCounts);
+        const remainingKeys = Object.keys(newVerses).sort();
+        if (remainingKeys.length > 0) {
+          setSelectedCard(remainingKeys[0]);
+        }
+        setSelectedForDelete(new Set());
+        setShowDeleteModal(false);
+        notify(`✅ ${selectedForDelete.size}개 삭제 완료`);
+      };
+
+      const toggleSelectForDelete = (key) => {
+        setSelectedForDelete(prev => {
+          const newSet = new Set(prev);
+          if (newSet.has(key)) {
+            newSet.delete(key);
+          } else {
+            newSet.add(key);
+          }
+          return newSet;
+        });
+      };
+
+      const selectAllForDelete = () => {
+        const validKeys = Object.keys(verses).filter(k => verses[k].reference && verses[k].text);
+        setSelectedForDelete(new Set(validKeys));
+      };
+
+      const deselectAllForDelete = () => {
+        setSelectedForDelete(new Set());
       };
 
       const handleDeleteAllCards = () => {
@@ -475,8 +525,12 @@
                 e('span', {className: 'text-lg mb-1'}, '📊'), '기록'),
               e('button', {onClick: () => setShowStatsModal(true), className: 'flex flex-col items-center justify-center p-3 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl font-bold text-xs'},
                 e(BarChart3, {className: 'w-5 h-5 mb-1'}), '통계'),
-              e('button', {onClick: handleBackup, className: 'flex flex-col items-center justify-center p-3 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl font-bold text-xs'},
-                e(Download, {className: 'w-5 h-5 mb-1'}), '백업')
+              e('button', {onClick: () => { setShowDeleteModal(true); setDeleteMode('single'); setSelectedForDelete(new Set()); }, className: 'flex flex-col items-center justify-center p-3 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl font-bold text-xs'},
+                e('span', {className: 'text-lg mb-1'}, '🗑️'), '삭제')
+            ),
+            e('div', {className: 'grid grid-cols-1 gap-2 mt-2'},
+              e('button', {onClick: handleBackup, className: 'flex items-center justify-center p-3 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl font-bold text-xs'},
+                e(Download, {className: 'w-5 h-5 mr-2'}), '백업 다운로드')
             )
           )
         ),
@@ -677,6 +731,105 @@
             e('div', {className: 'flex gap-3'},
               e('button', {onClick: () => setShowDeleteMenu(false), className: 'flex-1 p-3 bg-gray-300 rounded-xl font-bold'}, '취소'),
               e('button', {onClick: handleDeleteAllCards, className: 'flex-1 p-3 bg-red-600 text-white rounded-xl font-bold'}, '초기화')
+            )
+          )
+        ),
+
+        // 삭제 모달
+        showDeleteModal && e('div', {className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'},
+          e('div', {className: 'bg-white rounded-3xl p-6 w-full max-w-lg max-h-[80vh] flex flex-col'},
+            e('h2', {className: 'text-2xl font-black mb-4'}, '🗑️ 말씀 삭제'),
+            
+            // 모드 선택 탭
+            e('div', {className: 'flex gap-2 mb-4'},
+              e('button', {
+                onClick: () => { setDeleteMode('single'); setSelectedForDelete(new Set()); },
+                className: `flex-1 p-3 rounded-xl font-bold ${deleteMode === 'single' ? 'bg-red-500 text-white' : 'bg-gray-200'}`
+              }, '개별 삭제'),
+              e('button', {
+                onClick: () => { setDeleteMode('multi'); setSelectedForDelete(new Set()); },
+                className: `flex-1 p-3 rounded-xl font-bold ${deleteMode === 'multi' ? 'bg-red-500 text-white' : 'bg-gray-200'}`
+              }, '선택 삭제')
+            ),
+
+            deleteMode === 'single' ? 
+              // 개별 삭제 모드
+              e('div', {className: 'flex-1 overflow-y-auto space-y-2'},
+                Object.keys(verses).sort().filter(k => verses[k].reference && verses[k].text).map(key => 
+                  e('div', {
+                    key,
+                    className: 'bg-gray-50 rounded-xl p-3 flex items-center justify-between'
+                  },
+                    e('div', {className: 'flex-1'},
+                      e('div', {className: 'font-black text-purple-600'}, `${key} - ${verses[key].reference}`),
+                      e('div', {className: 'text-sm text-gray-600'}, verses[key].text?.substring(0, 30) + '...')
+                    ),
+                    e('button', {
+                      onClick: () => {
+                        setSelectedCard(key);
+                        setShowDeleteConfirm(true);
+                      },
+                      className: 'ml-2 px-4 py-2 bg-red-500 text-white rounded-lg font-bold text-sm'
+                    }, '삭제')
+                  )
+                )
+              ) :
+              // 선택 삭제 모드
+              e('div', {className: 'flex-1 flex flex-col'},
+                e('div', {className: 'flex gap-2 mb-3'},
+                  e('button', {
+                    onClick: selectAllForDelete,
+                    className: 'flex-1 p-2 bg-gray-200 rounded-lg font-bold text-sm'
+                  }, '전체 선택'),
+                  e('button', {
+                    onClick: deselectAllForDelete,
+                    className: 'flex-1 p-2 bg-gray-200 rounded-lg font-bold text-sm'
+                  }, '전체 해제'),
+                  e('span', {className: 'flex items-center px-3 bg-red-100 rounded-lg font-bold text-red-600 text-sm'},
+                    `${selectedForDelete.size}개 선택`)
+                ),
+                e('div', {className: 'flex-1 overflow-y-auto space-y-2'},
+                  Object.keys(verses).sort().filter(k => verses[k].reference && verses[k].text).map(key => 
+                    e('div', {
+                      key,
+                      onClick: () => toggleSelectForDelete(key),
+                      className: `rounded-xl p-3 cursor-pointer flex items-center ${selectedForDelete.has(key) ? 'bg-red-100 border-2 border-red-400' : 'bg-gray-50 border-2 border-transparent'}`
+                    },
+                      e('div', {className: `w-6 h-6 rounded-full border-2 mr-3 flex items-center justify-center ${selectedForDelete.has(key) ? 'bg-red-500 border-red-500' : 'border-gray-300'}`},
+                        selectedForDelete.has(key) && e('span', {className: 'text-white text-sm'}, '✓')
+                      ),
+                      e('div', {className: 'flex-1'},
+                        e('div', {className: 'font-black text-purple-600'}, `${key} - ${verses[key].reference}`),
+                        e('div', {className: 'text-sm text-gray-600'}, verses[key].text?.substring(0, 30) + '...')
+                      )
+                    )
+                  )
+                ),
+                selectedForDelete.size > 0 && e('button', {
+                  onClick: handleDeleteSelected,
+                  className: 'mt-3 p-3 bg-red-600 text-white rounded-xl font-bold'
+                }, `🗑️ ${selectedForDelete.size}개 삭제하기`)
+              ),
+
+            e('button', {
+              onClick: () => { setShowDeleteModal(false); setSelectedForDelete(new Set()); },
+              className: 'mt-4 p-3 bg-gray-300 rounded-xl font-bold'
+            }, '닫기')
+          )
+        ),
+
+        // 개별 삭제 확인 모달
+        showDeleteConfirm && e('div', {className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'},
+          e('div', {className: 'bg-white rounded-3xl p-6 w-full max-w-sm'},
+            e('h2', {className: 'text-2xl font-black mb-4'}, '⚠️ 삭제 확인'),
+            e('div', {className: 'bg-red-50 rounded-xl p-4 mb-4'},
+              e('div', {className: 'font-black text-red-600 mb-2'}, `${selectedCard} - ${verses[selectedCard]?.reference}`),
+              e('div', {className: 'text-sm text-gray-700'}, verses[selectedCard]?.text?.substring(0, 50) + '...')
+            ),
+            e('p', {className: 'mb-4 font-bold text-gray-700'}, '이 말씀을 삭제하시겠습니까?'),
+            e('div', {className: 'flex gap-3'},
+              e('button', {onClick: () => setShowDeleteConfirm(false), className: 'flex-1 p-3 bg-gray-300 rounded-xl font-bold'}, '취소'),
+              e('button', {onClick: handleDeleteCard, className: 'flex-1 p-3 bg-red-600 text-white rounded-xl font-bold'}, '삭제')
             )
           )
         )
