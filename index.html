@@ -89,6 +89,8 @@
       const [showDeleteModal, setShowDeleteModal] = useState(false);
       const [selectedForDelete, setSelectedForDelete] = useState(new Set());
       const [deleteMode, setDeleteMode] = useState('single'); // 'single' or 'multi'
+      const [showEditModal, setShowEditModal] = useState(false);
+      const [editCard, setEditCard] = useState({ key: '', reference: '', text: '' });
 
       const STORAGE_KEYS = { verses: 'bibleMemoryVerses', counts: 'bibleMemoryCounts', history: 'bibleDailyHistory' };
 
@@ -429,6 +431,28 @@
         setSelectedForDelete(new Set());
       };
 
+      const openEditModal = (key) => {
+        setEditCard({
+          key: key,
+          reference: verses[key]?.reference || '',
+          text: verses[key]?.text || ''
+        });
+        setShowEditModal(true);
+      };
+
+      const handleEditSubmit = () => {
+        if (!editCard.reference || !editCard.text) {
+          notify('⚠️ 성경 구절과 말씀을 입력해주세요');
+          return;
+        }
+        setVerses(prev => ({
+          ...prev,
+          [editCard.key]: { reference: editCard.reference, text: editCard.text }
+        }));
+        setShowEditModal(false);
+        notify('✅ 수정 완료');
+      };
+
       const handleDeleteAllCards = () => {
         const defaultData = generateDefaultData();
         setVerses(defaultData);
@@ -475,9 +499,15 @@
 
           keys.length > 0 && e(React.Fragment, null,
             e('div', {className: 'bg-white rounded-3xl p-5 shadow-lg mb-4'},
-              e('div', {className: 'text-center mb-3'},
-                e('div', {className: 'font-black text-purple-600 text-xl'}, selectedCard),
-                currentCard.reference && e('div', {className: 'font-black text-gray-900 text-lg'}, currentCard.reference)
+              e('div', {className: 'flex justify-between items-start mb-3'},
+                e('div', {className: 'text-center flex-1'},
+                  e('div', {className: 'font-black text-purple-600 text-xl'}, selectedCard),
+                  currentCard.reference && e('div', {className: 'font-black text-gray-900 text-lg'}, currentCard.reference)
+                ),
+                e('button', {
+                  onClick: () => openEditModal(selectedCard),
+                  className: 'px-3 py-1 bg-yellow-500 text-white rounded-lg font-bold text-sm'
+                }, '✏️ 수정')
               ),
               currentCard.text && e('div', {className: 'font-bold text-gray-800 text-base leading-relaxed'}, currentCard.text)
             ),
@@ -830,6 +860,38 @@
             e('div', {className: 'flex gap-3'},
               e('button', {onClick: () => setShowDeleteConfirm(false), className: 'flex-1 p-3 bg-gray-300 rounded-xl font-bold'}, '취소'),
               e('button', {onClick: handleDeleteCard, className: 'flex-1 p-3 bg-red-600 text-white rounded-xl font-bold'}, '삭제')
+            )
+          )
+        ),
+
+        // 수정 모달
+        showEditModal && e('div', {className: 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'},
+          e('div', {className: 'bg-white rounded-3xl p-6 w-full max-w-lg'},
+            e('h2', {className: 'text-2xl font-black mb-4'}, `✏️ ${editCard.key} 수정`),
+            e('div', {className: 'space-y-4'},
+              e('div', null,
+                e('label', {className: 'block font-bold mb-1'}, '성경 구절'),
+                e('input', {
+                  type: 'text',
+                  value: editCard.reference,
+                  onChange: (ev) => setEditCard({...editCard, reference: ev.target.value}),
+                  className: 'w-full p-3 border-2 rounded-xl',
+                  placeholder: '예: 요한복음 3:16'
+                })
+              ),
+              e('div', null,
+                e('label', {className: 'block font-bold mb-1'}, '말씀'),
+                e('textarea', {
+                  value: editCard.text,
+                  onChange: (ev) => setEditCard({...editCard, text: ev.target.value}),
+                  className: 'w-full p-3 border-2 rounded-xl min-h-[150px]',
+                  placeholder: '말씀 내용을 입력하세요...'
+                })
+              )
+            ),
+            e('div', {className: 'flex gap-3 mt-4'},
+              e('button', {onClick: () => setShowEditModal(false), className: 'flex-1 p-3 bg-gray-300 rounded-xl font-bold'}, '취소'),
+              e('button', {onClick: handleEditSubmit, className: 'flex-1 p-3 bg-yellow-500 text-white rounded-xl font-bold'}, '저장')
             )
           )
         )
