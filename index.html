@@ -310,9 +310,10 @@
       };
 
       const searchVerses = () => {
-        if (!searchQuery.trim()) return [];
+        const validKeys = Object.keys(verses).filter(k => verses[k].reference && verses[k].text);
+        if (!searchQuery.trim()) return validKeys;
         const query = searchQuery.toLowerCase();
-        return Object.keys(verses).filter(key => {
+        return validKeys.filter(key => {
           const v = verses[key];
           return v.reference?.toLowerCase().includes(query) || v.text?.toLowerCase().includes(query);
         });
@@ -567,14 +568,16 @@
               className: 'w-full p-3 border-2 rounded-xl mb-4'
             }),
             e('div', {className: 'flex-1 overflow-y-auto space-y-2'},
-              searchVerses().map(key => e('div', {
-                key,
-                onClick: () => { setSelectedCard(key); setShowSearchModal(false); },
-                className: 'bg-purple-50 rounded-xl p-3 cursor-pointer hover:bg-purple-100'
-              },
-                e('div', {className: 'font-black text-purple-600'}, `${key} - ${verses[key].reference}`),
-                e('div', {className: 'text-sm text-gray-700'}, verses[key].text?.substring(0, 50) + '...')
-              ))
+              searchVerses().length === 0 ?
+                e('div', {className: 'text-center text-gray-500 py-8'}, '검색 결과가 없습니다') :
+                searchVerses().map(key => e('div', {
+                  key,
+                  onClick: () => { setSelectedCard(key); setShowSearchModal(false); setSearchQuery(''); },
+                  className: 'bg-purple-50 rounded-xl p-3 cursor-pointer hover:bg-purple-100'
+                },
+                  e('div', {className: 'font-black text-purple-600'}, `${key} - ${verses[key].reference}`),
+                  e('div', {className: 'text-sm text-gray-700'}, verses[key].text?.substring(0, 50) + '...')
+                ))
             ),
             e('button', {onClick: () => setShowSearchModal(false), className: 'mt-4 p-3 bg-gray-300 rounded-xl font-bold'}, '닫기')
           )
