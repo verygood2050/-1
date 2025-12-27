@@ -2,15 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>📖 성경 암송 카드</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     * { -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+    .scroll-container::-webkit-scrollbar { width: 12px; }
+    .scroll-container::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 10px; }
+    .scroll-container::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 10px; }
+    .scroll-container::-webkit-scrollbar-thumb:hover { background: #9333ea; }
   </style>
 </head>
 <body>
@@ -21,38 +25,44 @@
 
     // 아이콘 컴포넌트들
     const Upload = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
       </svg>
     );
+    
     const X = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
       </svg>
     );
+    
     const Download = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
       </svg>
     );
+    
     const Search = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
     );
+    
     const BarChart3 = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 20V10m6 10V4M6 20v-4" />
       </svg>
     );
+    
     const Shuffle = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
       </svg>
     );
+    
     const RotateCcw = ({ className }) => (
-      <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m-.582 0a8.001 8.001 0 0115.356 2M4 4h5m11 16v-5h-.581m.581 0a8.001 8.001 0 01-15.356-2m15.356 2H15" />
       </svg>
     );
 
@@ -115,28 +125,50 @@
       const [editCardReference, setEditCardReference] = useState('');
       const [editCardText, setEditCardText] = useState('');
 
+      // localStorage 헬퍼 함수
+      const storage = {
+        get: (key) => {
+          try {
+            const value = localStorage.getItem(key);
+            return value ? { value } : null;
+          } catch (e) {
+            console.error('Storage get error:', e);
+            return null;
+          }
+        },
+        set: (key, value) => {
+          try {
+            localStorage.setItem(key, value);
+            return true;
+          } catch (e) {
+            console.error('Storage set error:', e);
+            return false;
+          }
+        }
+      };
+
       useEffect(() => {
         const loadData = () => {
           try {
-            const versesData = localStorage.getItem('memoryVerses');
-            if (versesData) {
-              setVerses(JSON.parse(versesData));
+            const versesResult = storage.get('memoryVerses');
+            if (versesResult?.value) {
+              setVerses(JSON.parse(versesResult.value));
               notify('✅ 저장된 데이터를 불러왔습니다');
             } else {
               const initialData = generateEmptyData();
               setVerses(initialData);
-              localStorage.setItem('memoryVerses', JSON.stringify(initialData));
+              storage.set('memoryVerses', JSON.stringify(initialData));
               notify('📖 성경 암송 카드에 오신 것을 환영합니다!');
             }
 
-            const countsData = localStorage.getItem('memoryCounts');
-            if (countsData) {
-              setCounts(JSON.parse(countsData));
+            const countsResult = storage.get('memoryCounts');
+            if (countsResult?.value) {
+              setCounts(JSON.parse(countsResult.value));
             }
 
-            const historyData = localStorage.getItem('dailyHistory');
-            if (historyData) {
-              setDailyHistory(JSON.parse(historyData));
+            const historyResult = storage.get('dailyHistory');
+            if (historyResult?.value) {
+              setDailyHistory(JSON.parse(historyResult.value));
             }
           } catch (error) {
             console.error('데이터 로딩 오류:', error);
@@ -146,39 +178,37 @@
           }
           setIsLoading(false);
         };
+        
         loadData();
       }, []);
 
       useEffect(() => {
         if (!isLoading && Object.keys(verses).length > 0) {
-          try {
-            localStorage.setItem('memoryVerses', JSON.stringify(verses));
-          } catch (error) {
-            console.error('구절 저장 실패:', error);
-            notify('⚠️ 데이터 저장 실패! 백업을 권장합니다.', 4000);
-          }
+          storage.set('memoryVerses', JSON.stringify(verses));
         }
       }, [verses, isLoading]);
 
       useEffect(() => {
         if (!isLoading) {
-          try {
-            localStorage.setItem('memoryCounts', JSON.stringify(counts));
-          } catch (error) {
-            console.error('카운트 저장 실패:', error);
-          }
+          storage.set('memoryCounts', JSON.stringify(counts));
         }
       }, [counts, isLoading]);
 
       useEffect(() => {
         if (!isLoading) {
-          try {
-            localStorage.setItem('dailyHistory', JSON.stringify(dailyHistory));
-          } catch (error) {
-            console.error('히스토리 저장 실패:', error);
-          }
+          storage.set('dailyHistory', JSON.stringify(dailyHistory));
         }
       }, [dailyHistory, isLoading]);
+
+      // 선택된 카드가 verses에 없으면 첫 번째 카드로 변경
+      useEffect(() => {
+        if (!isLoading && Object.keys(verses).length > 0) {
+          const keys = Object.keys(verses).sort();
+          if (!verses[selectedCard] && keys.length > 0) {
+            setSelectedCard(keys[0]);
+          }
+        }
+      }, [verses, selectedCard, isLoading]);
 
       const notify = (message, duration = 3000) => {
         setNotification(message);
@@ -192,7 +222,9 @@
         const duplicates = [];
 
         lines.forEach(line => {
-          if (line.includes('번호') || line.includes('성경') || line.includes('본문') || line.includes('구절')) return;
+          if (line.includes('번호') || line.includes('성경') || line.includes('본문') || line.includes('구절')) {
+            return;
+          }
 
           const normalized = line.replace(/[\s\t]+/g, ' ').trim();
           
@@ -245,7 +277,7 @@
             if (existingInVerses) {
               duplicates.push(`${reference} (기존: ${existingInVerses[0]})`);
             } else if (existingInUpdates) {
-              duplicates.push(`${reference} (배치 내 중복)`);
+              duplicates.push(`${reference} (배치 내 중복: ${existingInUpdates[0]})`);
             } else {
               updates[cardKey] = { reference, text: verseText };
               successCount++;
@@ -272,8 +304,11 @@
         } else {
           notify('❌ 올바른 형식의 말씀을 찾을 수 없습니다', 3000);
         }
-        setPasteText('');
-        setShowUploadModal(false);
+        
+        setTimeout(() => {
+          setPasteText('');
+          setShowUploadModal(false);
+        }, 2000);
       };
 
       const handleFileUpload = async (e) => {
@@ -290,6 +325,7 @@
 
         try {
           if (!window.mammoth) {
+            notify('📚 라이브러리 로딩 중...', 10000);
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
             document.head.appendChild(script);
@@ -314,21 +350,24 @@
           
           if (successCount > 0) {
             setVerses(prev => ({ ...prev, ...updates }));
-            notify(`✅ ${successCount}개의 말씀을 추가했습니다${duplicates.length > 0 ? ` (${duplicates.length}개 중복 제외)` : ''}`, 2000);
+            notify(`✅ ${successCount}개의 말씀을 추가했습니다${duplicates.length > 0 ? `, ${duplicates.length}개 중복 제외` : ''}`, 2000);
+            setTimeout(() => setShowUploadModal(false), 2000);
           } else {
             notify('❌ 올바른 형식의 말씀을 찾을 수 없습니다', 3000);
           }
         } catch (error) {
+          console.error('파일 처리 오류:', error);
           notify('❌ 파일 처리 실패: ' + error.message, 5000);
         } finally {
           e.target.value = '';
-          setShowUploadModal(false);
         }
       };
 
       const handleBackup = () => {
         const backupData = {
-          verses, counts, dailyHistory,
+          verses,
+          counts,
+          dailyHistory,
           backupDate: new Date().toISOString()
         };
         const dataStr = JSON.stringify(backupData, null, 2);
@@ -352,9 +391,9 @@
         reader.onload = (event) => {
           try {
             const backupData = JSON.parse(event.target.result);
-            if (backupData.verses && backupData.counts) {
+            if (backupData.verses) {
               setVerses(backupData.verses);
-              setCounts(backupData.counts);
+              if (backupData.counts) setCounts(backupData.counts);
               if (backupData.dailyHistory) setDailyHistory(backupData.dailyHistory);
               notify('✅ 데이터가 복원되었습니다');
             } else {
@@ -411,7 +450,6 @@
           }).toDestination();
 
           const now = window.Tone.now();
-          
           const melodies = {
             1: [['G4', 0], ['G4', 0.2], ['A4', 0.4], ['A4', 0.6], ['G4', 0.8], ['G4', 1.0], ['E4', 1.2]],
             2: [['C4', 0], ['C4', 0.3], ['G4', 0.6], ['G4', 0.9], ['A4', 1.2], ['A4', 1.5], ['G4', 1.8]],
@@ -460,9 +498,7 @@
           
           setEncouragementMsg(message);
           setTimeout(() => setEncouragementMsg(''), 7000);
-          
-          const melodyLevel = Math.min(Math.floor(newCount / 10), 4);
-          playCelebrationMelody(melodyLevel);
+          playCelebrationMelody(Math.min(Math.floor(newCount / 10), 4));
         }
       };
 
@@ -500,14 +536,18 @@
         } else if (type === '0') {
           const newCounts = {...counts};
           Object.keys(newCounts).forEach(key => {
-            if (key.startsWith('0')) delete newCounts[key];
+            if (key.match(/^0\d+$/) || key.match(/^\d{3}$/)) {
+              delete newCounts[key];
+            }
           });
           setCounts(newCounts);
-          notify(`✅ 0XX 그룹 암송 기록이 초기화되었습니다`);
+          notify(`✅ 숫자 그룹 암송 기록이 초기화되었습니다`);
         } else if (type.match(/^[A-E]$/)) {
           const newCounts = {...counts};
           Object.keys(newCounts).forEach(key => {
-            if (key.startsWith(type)) delete newCounts[key];
+            if (key.startsWith(type)) {
+              delete newCounts[key];
+            }
           });
           setCounts(newCounts);
           notify(`✅ ${type} 그룹 암송 기록이 초기화되었습니다`);
@@ -538,7 +578,9 @@
         
         const newDailyHistory = {...dailyHistory};
         Object.keys(newDailyHistory).forEach(date => {
-          if (newDailyHistory[date][selectedCard]) delete newDailyHistory[date][selectedCard];
+          if (newDailyHistory[date][selectedCard]) {
+            delete newDailyHistory[date][selectedCard];
+          }
         });
         setDailyHistory(newDailyHistory);
         
@@ -556,26 +598,49 @@
         );
       };
 
-      const selectAllCards = () => setSelectedForDelete(Object.keys(verses).sort());
-      const deselectAllCards = () => setSelectedForDelete([]);
-
       const handleAddCard = () => {
-        if (!newCardNumber.trim()) { notify('⚠️ 카드 번호를 입력해주세요'); return; }
-        if (!newCardReference.trim()) { notify('⚠️ 성경 구절을 입력해주세요'); return; }
-        if (!newCardText.trim()) { notify('⚠️ 본문을 입력해주세요'); return; }
+        if (!newCardNumber.trim()) {
+          notify('⚠️ 카드 번호를 입력해주세요');
+          return;
+        }
+        if (!newCardReference.trim()) {
+          notify('⚠️ 성경 구절을 입력해주세요');
+          return;
+        }
+        if (!newCardText.trim()) {
+          notify('⚠️ 본문을 입력해주세요');
+          return;
+        }
 
         const cardKey = newCardNumber.toUpperCase().trim();
-        if (verses[cardKey]) { notify(`⚠️ ${cardKey} 카드가 이미 존재합니다`); return; }
+        
+        if (verses[cardKey]) {
+          notify(`⚠️ ${cardKey} 카드가 이미 존재합니다`);
+          return;
+        }
 
         const existingCard = Object.entries(verses).find(([key, value]) => 
           value.reference === newCardReference.trim()
         );
-        if (existingCard) { notify(`⚠️ ${newCardReference}는 이미 ${existingCard[0]} 카드에 있습니다`); return; }
+        
+        if (existingCard) {
+          notify(`⚠️ ${newCardReference}는 이미 ${existingCard[0]} 카드에 있습니다`);
+          return;
+        }
 
-        setVerses(prev => ({
-          ...prev,
-          [cardKey]: { reference: newCardReference.trim(), text: newCardText.trim() }
-        }));
+        // 새 카드 추가
+        const newVerses = {
+          ...verses,
+          [cardKey]: {
+            reference: newCardReference.trim(),
+            text: newCardText.trim()
+          }
+        };
+        
+        setVerses(newVerses);
+        
+        // 즉시 저장
+        storage.set('memoryVerses', JSON.stringify(newVerses));
 
         notify(`✅ ${cardKey} 카드가 추가되었습니다`);
         setSelectedCard(cardKey);
@@ -586,12 +651,21 @@
       };
 
       const handleEditCard = () => {
-        if (!editCardReference.trim()) { notify('⚠️ 성경 구절을 입력해주세요'); return; }
-        if (!editCardText.trim()) { notify('⚠️ 본문을 입력해주세요'); return; }
+        if (!editCardReference.trim()) {
+          notify('⚠️ 성경 구절을 입력해주세요');
+          return;
+        }
+        if (!editCardText.trim()) {
+          notify('⚠️ 본문을 입력해주세요');
+          return;
+        }
 
         setVerses(prev => ({
           ...prev,
-          [selectedCard]: { reference: editCardReference.trim(), text: editCardText.trim() }
+          [selectedCard]: {
+            reference: editCardReference.trim(),
+            text: editCardText.trim()
+          }
         }));
 
         notify(`✅ ${selectedCard} 카드가 수정되었습니다`);
@@ -605,7 +679,10 @@
       };
 
       const handleDeleteSelectedCards = () => {
-        if (selectedForDelete.length === 0) { notify('⚠️ 삭제할 카드를 선택해주세요'); return; }
+        if (selectedForDelete.length === 0) {
+          notify('⚠️ 삭제할 카드를 선택해주세요');
+          return;
+        }
 
         const newVerses = {...verses};
         const newCounts = {...counts};
@@ -633,12 +710,35 @@
         setShowDeleteMenu(false);
       };
 
+      // 카드 그룹 분류 함수 - 개선됨
+      const getCardGroups = () => {
+        const allKeys = Object.keys(verses).sort();
+        
+        // 숫자로만 이루어진 카드 (001, 002, 010, 123 등)
+        const numericCards = allKeys.filter(key => /^\d+$/.test(key));
+        
+        // A-E로 시작하는 카드
+        const letterGroups = {};
+        ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
+          const cards = allKeys.filter(key => key.toUpperCase().startsWith(letter));
+          if (cards.length > 0) letterGroups[letter] = cards;
+        });
+        
+        // 기타 카드 (숫자도 아니고 A-E로 시작하지도 않는 카드)
+        const otherCards = allKeys.filter(key => 
+          !/^\d+$/.test(key) && !['A', 'B', 'C', 'D', 'E'].some(l => key.toUpperCase().startsWith(l))
+        );
+        
+        return { numericCards, letterGroups, otherCards };
+      };
+
       const currentCard = verses[selectedCard] || { reference: '', text: '' };
       const keys = Object.keys(verses).sort();
       const currentIndex = keys.indexOf(selectedCard);
       const currentCount = counts[selectedCard] || 0;
       const searchResults = searchVerses();
       const stats = getStats();
+      const cardGroups = getCardGroups();
 
       const getCharacter = (count) => {
         if (count === 0) return { emoji: '😊' };
@@ -674,6 +774,7 @@
               )}
 
               <div className="max-w-md mx-auto">
+                {/* 컨트롤 패널 */}
                 <div className="bg-white shadow-lg p-4 mb-3">
                   <h1 className="text-2xl font-black text-center mb-4 text-purple-700">📖 성경 암송 카드 📖</h1>
                   
@@ -685,7 +786,7 @@
                       <div className="flex gap-2 items-center">
                         <button
                           onClick={goToPrevious}
-                          disabled={currentIndex === 0 || keys.length === 0}
+                          disabled={currentIndex === 0}
                           className="px-1.5 py-1.5 bg-purple-500 text-white rounded-xl font-bold hover:bg-purple-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-xs"
                         >
                           ◀
@@ -699,19 +800,13 @@
                           {keys.map(key => {
                             const v = verses[key];
                             const hasContent = v && v.reference && v.text;
-                            const displayText = hasContent 
-                              ? `${key} - ${v.reference} ✅` 
-                              : `${key} ⚪`;
-                            return (
-                              <option key={key} value={key} style={{ fontSize: '10px' }}>
-                                {displayText}
-                              </option>
-                            );
+                            const displayText = hasContent ? `${key} - ${v.reference} ✅` : `${key} ⚪`;
+                            return <option key={key} value={key} style={{ fontSize: '10px' }}>{displayText}</option>;
                           })}
                         </select>
                         <button
                           onClick={goToNext}
-                          disabled={currentIndex === keys.length - 1 || keys.length === 0}
+                          disabled={currentIndex === keys.length - 1}
                           className="px-1.5 py-1.5 bg-purple-500 text-white rounded-xl font-bold hover:bg-purple-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-xs"
                         >
                           ▶
@@ -720,10 +815,7 @@
                     ) : (
                       <div className="text-center py-8 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
                         <p className="text-gray-400 font-bold mb-3">카드가 없습니다</p>
-                        <button
-                          onClick={() => setShowUploadModal(true)}
-                          className="px-6 py-2 bg-purple-500 text-white rounded-lg font-bold hover:bg-purple-600"
-                        >
+                        <button onClick={() => setShowUploadModal(true)} className="px-6 py-2 bg-purple-500 text-white rounded-lg font-bold hover:bg-purple-600">
                           말씀 추가하기
                         </button>
                       </div>
@@ -731,13 +823,10 @@
                   </div>
                 </div>
 
+                {/* 현재 암송 카드 */}
                 {keys.length > 0 && (
                   <>
-                    <div style={{ 
-                      background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-                      padding: '5px',
-                      borderRadius: '24px'
-                    }}>
+                    <div style={{ background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', padding: '5px', borderRadius: '24px' }}>
                       <div className="bg-white rounded-3xl p-5 shadow-lg">
                         <div className="flex items-center justify-center mb-3">
                           <span style={{ fontSize: '20px', marginRight: '0.375rem' }}>🐶</span>
@@ -761,10 +850,7 @@
                         ) : (
                           <div className="text-center py-8">
                             <p className="text-gray-400 font-bold text-base">말씀을 추가해주세요</p>
-                            <button 
-                              onClick={() => setShowUploadModal(true)}
-                              className="mt-3 px-6 py-2 bg-purple-500 text-white rounded-lg font-bold text-sm"
-                            >
+                            <button onClick={() => setShowUploadModal(true)} className="mt-3 px-6 py-2 bg-purple-500 text-white rounded-lg font-bold text-sm">
                               말씀 추가하기
                             </button>
                           </div>
@@ -772,6 +858,7 @@
                       </div>
                     </div>
 
+                    {/* 카운터 */}
                     <div className="mt-4 bg-white rounded-3xl p-6 shadow-lg">
                       <div className="flex items-start justify-between mb-2">
                         <button
@@ -780,10 +867,7 @@
                         >
                           현재 초기화
                         </button>
-                        <button
-                          onClick={() => setShowResetCountModal(true)}
-                          className="p-1.5 bg-gray-400 text-white rounded-lg font-bold hover:bg-gray-500 transition-colors"
-                        >
+                        <button onClick={() => setShowResetCountModal(true)} className="p-1.5 bg-gray-400 text-white rounded-lg font-bold hover:bg-gray-500 transition-colors">
                           <RotateCcw className="w-4 h-4" />
                         </button>
                       </div>
@@ -816,88 +900,48 @@
                       </div>
                     </div>
 
+                    {/* 하단 버튼 그리드 */}
                     <div className="mt-4 bg-white rounded-3xl p-4 shadow-lg">
                       <div className="grid grid-cols-4 gap-2 mb-2">
-                        <button
-                          onClick={() => setShowAddModal(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <span className="text-base mb-0.5">➕</span>
-                          개별추가
+                        <button onClick={() => setShowAddModal(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <span className="text-base mb-0.5">➕</span>개별추가
                         </button>
-                        <button
-                          onClick={() => setShowUploadModal(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <Upload className="w-4 h-4 mb-0.5" />
-                          대량추가
+                        <button onClick={() => setShowUploadModal(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <Upload className="w-4 h-4 mb-0.5" />대량추가
                         </button>
-                        <button
-                          onClick={openEditModal}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <span className="text-base mb-0.5">✏️</span>
-                          수정
+                        <button onClick={openEditModal} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <span className="text-base mb-0.5">✏️</span>수정
                         </button>
-                        <button
-                          onClick={() => setShowSearchModal(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-teal-500 to-teal-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <Search className="w-4 h-4 mb-0.5" />
-                          검색
+                        <button onClick={() => setShowSearchModal(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-teal-500 to-teal-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <Search className="w-4 h-4 mb-0.5" />검색
                         </button>
                       </div>
 
                       <div className="grid grid-cols-4 gap-2 mb-2">
-                        <button
-                          onClick={() => setShowAllVerses(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <span className="text-base mb-0.5">📖</span>
-                          말씀목록
+                        <button onClick={() => setShowAllVerses(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <span className="text-base mb-0.5">📖</span>말씀목록
                         </button>
-                        <button
-                          onClick={selectRandomCard}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <Shuffle className="w-4 h-4 mb-0.5" />
-                          퀴즈
+                        <button onClick={selectRandomCard} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <Shuffle className="w-4 h-4 mb-0.5" />퀴즈
                         </button>
-                        <button
-                          onClick={() => setShowAllCounts(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <span className="text-base mb-0.5">📊</span>
-                          기록
+                        <button onClick={() => setShowAllCounts(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <span className="text-base mb-0.5">📊</span>기록
                         </button>
-                        <button
-                          onClick={() => setShowStatsModal(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <BarChart3 className="w-4 h-4 mb-0.5" />
-                          통계
+                        <button onClick={() => setShowStatsModal(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <BarChart3 className="w-4 h-4 mb-0.5" />통계
                         </button>
                       </div>
 
                       <div className="grid grid-cols-3 gap-1.5">
-                        <button
-                          onClick={handleBackup}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-cyan-500 to-cyan-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <Download className="w-4 h-4 mb-0.5" />
-                          백업
+                        <button onClick={handleBackup} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-cyan-500 to-cyan-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <Download className="w-4 h-4 mb-0.5" />백업
                         </button>
                         <label className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-                          <Upload className="w-4 h-4 mb-0.5" />
-                          복원
+                          <Upload className="w-4 h-4 mb-0.5" />복원
                           <input type="file" accept=".json" onChange={handleRestore} className="hidden" />
                         </label>
-                        <button
-                          onClick={() => setShowDeleteMenu(true)}
-                          className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                          <X className="w-4 h-4 mb-0.5" />
-                          삭제
+                        <button onClick={() => setShowDeleteMenu(true)} className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl font-bold text-xs shadow-lg hover:shadow-xl transition-shadow">
+                          <X className="w-4 h-4 mb-0.5" />삭제
                         </button>
                       </div>
                     </div>
@@ -910,6 +954,7 @@
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">➕ 개별 카드 추가</h2>
+                    
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-bold text-gray-700 mb-2">카드 번호</label>
@@ -917,7 +962,7 @@
                           type="text"
                           value={newCardNumber}
                           onChange={(e) => setNewCardNumber(e.target.value)}
-                          placeholder="예: A01, E07, 001"
+                          placeholder="예: A01, E07, 001, 024"
                           className="w-full p-3 border-2 border-blue-300 rounded-xl focus:border-blue-500 focus:outline-none font-bold"
                         />
                       </div>
@@ -941,9 +986,14 @@
                         />
                       </div>
                     </div>
+
                     <div className="flex gap-3 mt-6">
-                      <button onClick={() => { setShowAddModal(false); setNewCardNumber(''); setNewCardReference(''); setNewCardText(''); }} className="flex-1 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">취소</button>
-                      <button onClick={handleAddCard} className="flex-1 p-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700">추가하기</button>
+                      <button onClick={() => { setShowAddModal(false); setNewCardNumber(''); setNewCardReference(''); setNewCardText(''); }} className="flex-1 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">
+                        취소
+                      </button>
+                      <button onClick={handleAddCard} className="flex-1 p-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700">
+                        추가하기
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -954,9 +1004,11 @@
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">✏️ 카드 수정</h2>
+                    
                     <div className="mb-4 p-3 bg-purple-50 rounded-xl">
                       <p className="text-sm font-bold text-purple-700">카드 번호: <span className="text-purple-900">{selectedCard}</span></p>
                     </div>
+
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-bold text-gray-700 mb-2">성경 구절</label>
@@ -964,7 +1016,6 @@
                           type="text"
                           value={editCardReference}
                           onChange={(e) => setEditCardReference(e.target.value)}
-                          placeholder="예: 요한복음 3:16"
                           className="w-full p-3 border-2 border-amber-300 rounded-xl focus:border-amber-500 focus:outline-none font-bold"
                         />
                       </div>
@@ -973,11 +1024,11 @@
                         <textarea
                           value={editCardText}
                           onChange={(e) => setEditCardText(e.target.value)}
-                          placeholder="성경 본문을 입력하세요..."
                           className="w-full h-40 p-3 border-2 border-amber-300 rounded-xl focus:border-amber-500 focus:outline-none resize-none font-bold"
                         />
                       </div>
                     </div>
+
                     <div className="flex gap-3 mt-6">
                       <button onClick={() => setShowEditModal(false)} className="flex-1 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">취소</button>
                       <button onClick={handleEditCard} className="flex-1 p-3 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700">수정하기</button>
@@ -991,6 +1042,7 @@
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-3xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">📦 대량 말씀 가져오기</h2>
+                    
                     <div className="space-y-4">
                       <div className="border-2 border-blue-500 rounded-xl p-4 bg-blue-50">
                         <h3 className="text-lg font-black mb-3 text-blue-700">📝 텍스트 붙여넣기</h3>
@@ -1002,10 +1054,12 @@
 
 예시:
 A01 고린도후서 5:17 그런즉 누구든지...
+E07 요한복음 15:8 너희가 열매를...
 001 창세기 1:1,31 태초에 하나님이...`}
                         />
                         <button onClick={handlePasteSubmit} className="w-full mt-3 p-3 bg-blue-600 text-white rounded-lg font-bold">추가하기</button>
                       </div>
+
                       <div className="border-2 border-purple-500 rounded-xl p-4 bg-purple-50">
                         <h3 className="text-lg font-black mb-3 text-purple-700">📄 워드 파일 업로드</h3>
                         <label className="block">
@@ -1016,6 +1070,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                           <input type="file" accept=".docx" onChange={handleFileUpload} className="hidden" />
                         </label>
                       </div>
+
                       <div className="border-2 border-green-500 rounded-xl p-4 bg-green-50">
                         <h3 className="text-lg font-black mb-3 text-green-700">📥 백업에서 복원</h3>
                         <label className="block">
@@ -1027,6 +1082,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         </label>
                       </div>
                     </div>
+
                     <button onClick={() => setShowUploadModal(false)} className="w-full mt-4 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">닫기</button>
                   </div>
                 </div>
@@ -1037,6 +1093,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-3xl p-6 w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">🔍 말씀 검색</h2>
+                    
                     <div className="mb-4">
                       <input
                         type="text"
@@ -1046,7 +1103,8 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         className="w-full p-3 border-2 border-teal-300 rounded-xl focus:border-teal-500 focus:outline-none font-bold"
                       />
                     </div>
-                    <div className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 200px)' }}>
+
+                    <div className="flex-1 overflow-y-auto scroll-container" style={{ maxHeight: 'calc(85vh - 200px)' }}>
                       {searchQuery.trim() === '' ? (
                         <div className="text-center py-12 text-gray-400 font-bold">검색어를 입력하세요</div>
                       ) : searchResults.length === 0 ? (
@@ -1076,6 +1134,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         </div>
                       )}
                     </div>
+
                     <button onClick={() => setShowSearchModal(false)} className="w-full mt-4 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">닫기</button>
                   </div>
                 </div>
@@ -1088,7 +1147,8 @@ A01 고린도후서 5:17 그런즉 누구든지...
                     <div className="p-6 border-b flex-shrink-0">
                       <h2 className="text-2xl font-black text-gray-800">📊 암송 통계</h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6">
+
+                    <div className="flex-1 overflow-y-auto scroll-container p-6">
                       <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 mb-4">
                         <h3 className="font-black text-purple-700 mb-3 text-lg">📈 전체 현황</h3>
                         <div className="space-y-2 text-sm font-bold text-gray-700">
@@ -1097,6 +1157,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                           <div className="flex justify-between"><span>등록된 말씀:</span><span className="text-purple-600">{stats.verseCards}개</span></div>
                         </div>
                       </div>
+
                       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 mb-4">
                         <h3 className="font-black text-blue-700 mb-3 text-lg">📅 최근 7일 암송 기록</h3>
                         <div className="space-y-2">
@@ -1106,10 +1167,12 @@ A01 고린도후서 5:17 그런즉 누구든지...
                             const dateObj = new Date(day.date);
                             const dayName = ['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()];
                             const dateStr = `${dateObj.getMonth() + 1}/${dateObj.getDate()} (${dayName})`;
+                            
                             return (
                               <div key={idx}>
                                 <div className="flex justify-between text-xs font-bold text-gray-600 mb-1">
-                                  <span>{dateStr}</span><span className="text-blue-600">{day.count}회</span>
+                                  <span>{dateStr}</span>
+                                  <span className="text-blue-600">{day.count}회</span>
                                 </div>
                                 <div className="bg-gray-200 rounded-full h-6 overflow-hidden">
                                   <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2" style={{ width: `${width}%` }}>
@@ -1121,6 +1184,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                           })}
                         </div>
                       </div>
+
                       {stats.mostMemorized.length > 0 && (
                         <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4">
                           <h3 className="font-black text-green-700 mb-3 text-lg">🏆 가장 많이 암송한 말씀</h3>
@@ -1131,7 +1195,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                                   <span className="text-2xl">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '🏅'}</span>
                                   <div>
                                     <div className="font-black text-green-600">{key}</div>
-                                    <div className="text-xs font-bold text-gray-600">{verses[key].reference}</div>
+                                    <div className="text-xs font-bold text-gray-600">{verses[key]?.reference}</div>
                                   </div>
                                 </div>
                                 <span className="font-black text-green-600 text-lg">{count}회</span>
@@ -1141,6 +1205,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         </div>
                       )}
                     </div>
+
                     <div className="p-6 border-t flex-shrink-0">
                       <button onClick={() => setShowStatsModal(false)} className="w-full p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">닫기</button>
                     </div>
@@ -1154,12 +1219,16 @@ A01 고린도후서 5:17 그런즉 누구든지...
                   <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-2xl font-black text-gray-800">🎯 퀴즈 모드</h2>
-                      <button onClick={() => setShowQuizMode(false)} className="p-2 hover:bg-gray-100 rounded-lg"><X className="w-6 h-6" /></button>
+                      <button onClick={() => setShowQuizMode(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                        <X className="w-6 h-6" />
+                      </button>
                     </div>
+
                     <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 mb-4">
                       <div className="text-center mb-4">
                         <span className="font-black text-pink-600 text-3xl">{quizCard}</span>
                       </div>
+
                       {!showQuizAnswer ? (
                         <div className="text-center py-8">
                           <p className="text-6xl mb-4">🤔</p>
@@ -1169,15 +1238,17 @@ A01 고린도후서 5:17 그런즉 누구든지...
                       ) : (
                         <div>
                           <div className="mb-4">
-                            <div className="font-black text-gray-900 text-xl mb-2">{verses[quizCard].reference}</div>
-                            <div className="font-bold text-gray-800 text-lg leading-relaxed">{verses[quizCard].text}</div>
+                            <div className="font-black text-gray-900 text-xl mb-2">{verses[quizCard]?.reference}</div>
+                            <div className="font-bold text-gray-800 text-lg leading-relaxed">{verses[quizCard]?.text}</div>
                           </div>
                           <div className="flex items-center justify-center gap-2 text-sm font-bold text-purple-600">
-                            <span>암송 횟수:</span><span className="text-2xl">{counts[quizCard] || 0}회</span>
+                            <span>암송 횟수:</span>
+                            <span className="text-2xl">{counts[quizCard] || 0}회</span>
                           </div>
                         </div>
                       )}
                     </div>
+
                     <div className="flex gap-3">
                       {!showQuizAnswer ? (
                         <>
@@ -1191,6 +1262,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         </>
                       )}
                     </div>
+
                     <button onClick={() => { setSelectedCard(quizCard); setShowQuizMode(false); }} className="w-full mt-3 p-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300">이 카드로 이동</button>
                   </div>
                 </div>
@@ -1202,96 +1274,129 @@ A01 고린도후서 5:17 그런즉 누구든지...
                   <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">🔄 암송 기록 초기화</h2>
                     <p className="text-gray-600 font-bold mb-6 text-sm">초기화할 범위를 선택하세요</p>
+                    
                     <div className="space-y-3 mb-4">
-                      {(() => {
-                        const zeroCards = Object.keys(verses).filter(key => key.match(/^0\d+$/));
-                        if (zeroCards.length > 0) {
-                          return (
-                            <button onClick={() => resetCounters('0')} className="w-full p-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-xl font-bold text-left hover:from-blue-500 hover:to-blue-600 transition-all">
-                              <div className="text-lg">0XX 그룹 초기화</div>
-                              <div className="text-xs mt-1 opacity-90">숫자 카드 ({zeroCards.length}개)의 암송 기록 초기화</div>
-                            </button>
-                          );
-                        }
-                        return null;
-                      })()}
-                      {['A', 'B', 'C', 'D', 'E'].map(letter => {
-                        const letterCards = Object.keys(verses).filter(key => key.startsWith(letter));
-                        if (letterCards.length === 0) return null;
-                        return (
-                          <button key={letter} onClick={() => resetCounters(letter)} className="w-full p-4 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl font-bold text-left hover:from-orange-500 hover:to-orange-600 transition-all">
-                            <div className="text-lg">{letter} 그룹 초기화</div>
-                            <div className="text-xs mt-1 opacity-90">{letter} 카드 ({letterCards.length}개)의 암송 기록 초기화</div>
-                          </button>
-                        );
-                      })}
+                      {cardGroups.numericCards.length > 0 && (
+                        <button onClick={() => resetCounters('0')} className="w-full p-4 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-xl font-bold text-left hover:from-blue-500 hover:to-blue-600 transition-all">
+                          <div className="text-lg">숫자 그룹 초기화</div>
+                          <div className="text-xs mt-1 opacity-90">숫자 카드 ({cardGroups.numericCards.length}개)의 암송 기록 초기화</div>
+                        </button>
+                      )}
+                      
+                      {Object.entries(cardGroups.letterGroups).map(([letter, cards]) => (
+                        <button key={letter} onClick={() => resetCounters(letter)} className="w-full p-4 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl font-bold text-left hover:from-orange-500 hover:to-orange-600 transition-all">
+                          <div className="text-lg">{letter} 그룹 초기화</div>
+                          <div className="text-xs mt-1 opacity-90">{letter} 카드 ({cards.length}개)의 암송 기록 초기화</div>
+                        </button>
+                      ))}
+                      
                       <button onClick={() => resetCounters('all')} className="w-full p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold text-left hover:from-red-600 hover:to-red-700 transition-all">
                         <div className="text-lg">전체 기록 초기화</div>
-                        <div className="text-xs mt-1 opacity-90">모든 카드의 암송 기록 및 일일 통계 초기화</div>
+                        <div className="text-xs mt-1 opacity-90">모든 카드의 암송 기록 초기화</div>
                       </button>
                     </div>
+
                     <button onClick={() => setShowResetCountModal(false)} className="w-full p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">취소</button>
                   </div>
                 </div>
               )}
 
-              {/* 전체 카운터 보기 모달 */}
+              {/* 전체 카운터 보기 모달 - 개선된 버전 */}
               {showAllCounts && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-3xl w-full max-w-lg flex flex-col shadow-2xl" style={{ height: '85vh', maxHeight: '700px' }}>
                     <div className="p-6 border-b flex-shrink-0">
                       <h2 className="text-2xl font-black text-gray-800">📊 전체 암송 기록</h2>
+                      <p className="text-sm text-gray-500 mt-1">총 {keys.length}개 카드</p>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6">
-                      {(() => {
-                        const zeroCards = Object.keys(verses).filter(key => key.match(/^0\d+$/)).sort();
-                        if (zeroCards.length > 0) {
-                          return (
-                            <div className="mb-6">
-                              <h3 className="text-lg font-black text-purple-600 mb-2 bg-white py-2">0XX 그룹 (숫자) - {zeroCards.length}개</h3>
-                              <div className="grid grid-cols-6 gap-2">
-                                {zeroCards.map(key => {
-                                  const count = counts[key] || 0;
-                                  const hasVerse = verses[key]?.reference && verses[key]?.text;
-                                  const char = getCharacter(count);
-                                  return (
-                                    <button key={key} onClick={() => { setSelectedCard(key); setShowAllCounts(false); }} className={`p-3 rounded-xl font-bold text-sm shadow transition-all ${hasVerse ? 'bg-gradient-to-br from-purple-100 to-pink-100 hover:shadow-lg' : 'bg-gray-100 hover:bg-gray-200'}`}>
-                                      <div className="text-xs font-black text-gray-600">{key}</div>
-                                      <div className="text-lg font-black text-purple-600">{count}</div>
-                                      <div className="text-xs">{char.emoji}</div>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()}
-                      {['A', 'B', 'C', 'D', 'E'].map(letter => {
-                        const letterCards = Object.keys(verses).filter(key => key.startsWith(letter)).sort();
-                        if (letterCards.length === 0) return null;
-                        return (
-                          <div key={letter} className="mb-6">
-                            <h3 className="text-lg font-black text-purple-600 mb-2 bg-white py-2">{letter} 그룹 - {letterCards.length}개</h3>
-                            <div className="grid grid-cols-6 gap-2">
-                              {letterCards.map(key => {
-                                const count = counts[key] || 0;
-                                const hasVerse = verses[key]?.reference && verses[key]?.text;
-                                const char = getCharacter(count);
-                                return (
-                                  <button key={key} onClick={() => { setSelectedCard(key); setShowAllCounts(false); }} className={`p-3 rounded-xl font-bold text-sm shadow transition-all ${hasVerse ? 'bg-gradient-to-br from-purple-100 to-pink-100 hover:shadow-lg' : 'bg-gray-100 hover:bg-gray-200'}`}>
-                                    <div className="text-xs font-black text-gray-600">{key}</div>
-                                    <div className="text-lg font-black text-purple-600">{count}</div>
-                                    <div className="text-xs">{char.emoji}</div>
-                                  </button>
-                                );
-                              })}
-                            </div>
+                    
+                    <div className="flex-1 overflow-y-auto scroll-container p-6">
+                      {/* 숫자 그룹 */}
+                      {cardGroups.numericCards.length > 0 && (
+                        <div className="mb-6">
+                          <h3 className="text-lg font-black text-purple-600 mb-2 bg-white py-2 sticky top-0">
+                            숫자 그룹 - {cardGroups.numericCards.length}개
+                          </h3>
+                          <div className="grid grid-cols-6 gap-2">
+                            {cardGroups.numericCards.map(key => {
+                              const count = counts[key] || 0;
+                              const hasVerse = verses[key]?.reference && verses[key]?.text;
+                              const char = getCharacter(count);
+                              return (
+                                <button
+                                  key={key}
+                                  onClick={() => { setSelectedCard(key); setShowAllCounts(false); }}
+                                  className={`p-3 rounded-xl font-bold text-sm shadow transition-all ${hasVerse ? 'bg-gradient-to-br from-purple-100 to-pink-100 hover:shadow-lg' : 'bg-gray-100 hover:bg-gray-200'}`}
+                                >
+                                  <div className="text-xs font-black text-gray-600">{key}</div>
+                                  <div className="text-lg font-black text-purple-600">{count}</div>
+                                  <div className="text-xs">{char.emoji}</div>
+                                </button>
+                              );
+                            })}
                           </div>
-                        );
-                      })}
+                        </div>
+                      )}
+                      
+                      {/* A-E 그룹 */}
+                      {Object.entries(cardGroups.letterGroups).map(([letter, cards]) => (
+                        <div key={letter} className="mb-6">
+                          <h3 className="text-lg font-black text-purple-600 mb-2 bg-white py-2 sticky top-0">
+                            {letter} 그룹 - {cards.length}개
+                          </h3>
+                          <div className="grid grid-cols-6 gap-2">
+                            {cards.map(key => {
+                              const count = counts[key] || 0;
+                              const hasVerse = verses[key]?.reference && verses[key]?.text;
+                              const char = getCharacter(count);
+                              return (
+                                <button
+                                  key={key}
+                                  onClick={() => { setSelectedCard(key); setShowAllCounts(false); }}
+                                  className={`p-3 rounded-xl font-bold text-sm shadow transition-all ${hasVerse ? 'bg-gradient-to-br from-purple-100 to-pink-100 hover:shadow-lg' : 'bg-gray-100 hover:bg-gray-200'}`}
+                                >
+                                  <div className="text-xs font-black text-gray-600">{key}</div>
+                                  <div className="text-lg font-black text-purple-600">{count}</div>
+                                  <div className="text-xs">{char.emoji}</div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {/* 기타 그룹 */}
+                      {cardGroups.otherCards.length > 0 && (
+                        <div className="mb-6">
+                          <h3 className="text-lg font-black text-purple-600 mb-2 bg-white py-2 sticky top-0">
+                            기타 그룹 - {cardGroups.otherCards.length}개
+                          </h3>
+                          <div className="grid grid-cols-6 gap-2">
+                            {cardGroups.otherCards.map(key => {
+                              const count = counts[key] || 0;
+                              const hasVerse = verses[key]?.reference && verses[key]?.text;
+                              const char = getCharacter(count);
+                              return (
+                                <button
+                                  key={key}
+                                  onClick={() => { setSelectedCard(key); setShowAllCounts(false); }}
+                                  className={`p-3 rounded-xl font-bold text-sm shadow transition-all ${hasVerse ? 'bg-gradient-to-br from-purple-100 to-pink-100 hover:shadow-lg' : 'bg-gray-100 hover:bg-gray-200'}`}
+                                >
+                                  <div className="text-xs font-black text-gray-600 truncate">{key}</div>
+                                  <div className="text-lg font-black text-purple-600">{count}</div>
+                                  <div className="text-xs">{char.emoji}</div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {keys.length === 0 && (
+                        <div className="text-center py-12 text-gray-400 font-bold">등록된 카드가 없습니다</div>
+                      )}
                     </div>
+
                     <div className="p-6 border-t flex-shrink-0">
                       <button onClick={() => setShowAllCounts(false)} className="w-full p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">닫기</button>
                     </div>
@@ -1306,14 +1411,20 @@ A01 고린도후서 5:17 그런즉 누구든지...
                     <div className="p-6 border-b flex-shrink-0">
                       <h2 className="text-2xl font-black text-gray-800">📖 전체 말씀 목록</h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6">
+                    
+                    <div className="flex-1 overflow-y-auto scroll-container p-6">
                       <div className="space-y-3">
-                        {Object.keys(verses).sort().filter(key => verses[key].reference && verses[key].text).map(key => {
+                        {keys.filter(key => verses[key].reference && verses[key].text).map(key => {
                           const verse = verses[key];
                           const count = counts[key] || 0;
                           const char = getCharacter(count);
+                          
                           return (
-                            <div key={key} onClick={() => { setSelectedCard(key); setShowAllVerses(false); }} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 shadow hover:shadow-lg transition-shadow cursor-pointer border-2 border-purple-100">
+                            <div 
+                              key={key}
+                              onClick={() => { setSelectedCard(key); setShowAllVerses(false); }}
+                              className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-4 shadow hover:shadow-lg transition-shadow cursor-pointer border-2 border-purple-100"
+                            >
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <span className="font-black text-purple-600 text-lg">{key}</span>
@@ -1328,7 +1439,8 @@ A01 고린도후서 5:17 그런즉 누구든지...
                             </div>
                           );
                         })}
-                        {Object.keys(verses).filter(k => verses[k].reference && verses[k].text).length === 0 && (
+
+                        {keys.filter(k => verses[k].reference && verses[k].text).length === 0 && (
                           <div className="text-center py-12">
                             <p className="text-gray-400 font-bold text-lg mb-4">등록된 말씀이 없습니다</p>
                             <button onClick={() => { setShowAllVerses(false); setShowUploadModal(true); }} className="px-6 py-3 bg-purple-500 text-white rounded-xl font-bold">말씀 추가하기</button>
@@ -1336,6 +1448,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         )}
                       </div>
                     </div>
+
                     <div className="p-6 border-t flex-shrink-0">
                       <button onClick={() => setShowAllVerses(false)} className="w-full p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">닫기</button>
                     </div>
@@ -1349,16 +1462,19 @@ A01 고린도후서 5:17 그런즉 누구든지...
                   <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">🗑️ 삭제 메뉴</h2>
                     <p className="text-gray-600 font-bold mb-6 text-sm">삭제할 항목을 선택하세요</p>
+                    
                     <div className="space-y-3">
                       <button onClick={() => { setShowDeleteMenu(false); setShowDeleteConfirm(true); }} className="w-full p-4 bg-orange-500 text-white rounded-xl font-bold text-left hover:bg-orange-600 transition-colors">
                         <div className="text-lg">개별 삭제</div>
                         <div className="text-xs mt-1 opacity-90">{selectedCard} - {currentCard?.reference || '(빈 카드)'} 삭제</div>
                       </button>
+
                       <button onClick={() => { setShowDeleteMenu(false); setShowMultiDeleteModal(true); }} className="w-full p-4 bg-red-500 text-white rounded-xl font-bold text-left hover:bg-red-600 transition-colors">
                         <div className="text-lg">선택 삭제</div>
                         <div className="text-xs mt-1 opacity-90">여러 카드를 선택해서 삭제합니다</div>
                       </button>
                     </div>
+
                     <button onClick={() => setShowDeleteMenu(false)} className="w-full mt-4 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">취소</button>
                   </div>
                 </div>
@@ -1369,7 +1485,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
                     <h2 className="text-2xl font-black mb-4 text-gray-800">⚠️ 삭제 확인</h2>
-                    <p className="text-gray-700 font-bold mb-2"><span className="text-purple-600">{selectedCard}</span> 카드를 완전히 삭제하시겠습니까?</p>
+                    <p className="text-gray-700 font-bold mb-2"><span className="text-purple-600">{selectedCard}</span> 카드를 삭제하시겠습니까?</p>
                     {currentCard?.reference && <p className="text-sm text-gray-600 font-bold mb-4">{currentCard.reference}</p>}
                     <p className="text-sm text-red-600 font-bold mb-6">⚠️ 이 작업은 되돌릴 수 없습니다.</p>
                     <div className="flex gap-3">
@@ -1388,21 +1504,30 @@ A01 고린도후서 5:17 그런즉 누구든지...
                       <h2 className="text-2xl font-black text-gray-800">✅ 선택 삭제</h2>
                       <p className="text-sm text-gray-600 font-bold mt-2">삭제할 카드를 선택하세요</p>
                     </div>
+                    
                     <div className="p-4 border-b flex-shrink-0 bg-gray-50">
                       <div className="flex gap-2">
-                        <button onClick={selectAllCards} className="flex-1 p-2 bg-blue-500 text-white rounded-lg font-bold text-sm hover:bg-blue-600">전체 선택</button>
-                        <button onClick={deselectAllCards} className="flex-1 p-2 bg-gray-400 text-white rounded-lg font-bold text-sm hover:bg-gray-500">선택 해제</button>
+                        <button onClick={() => setSelectedForDelete(keys)} className="flex-1 p-2 bg-blue-500 text-white rounded-lg font-bold text-sm hover:bg-blue-600">전체 선택</button>
+                        <button onClick={() => setSelectedForDelete([])} className="flex-1 p-2 bg-gray-400 text-white rounded-lg font-bold text-sm hover:bg-gray-500">선택 해제</button>
                       </div>
-                      <div className="mt-2 text-center"><span className="text-sm font-black text-purple-600">{selectedForDelete.length}개 선택됨</span></div>
+                      <div className="mt-2 text-center">
+                        <span className="text-sm font-black text-purple-600">{selectedForDelete.length}개 선택됨</span>
+                      </div>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6">
+                    
+                    <div className="flex-1 overflow-y-auto scroll-container p-6">
                       <div className="space-y-2">
-                        {Object.keys(verses).sort().map(key => {
+                        {keys.map(key => {
                           const verse = verses[key];
                           const isSelected = selectedForDelete.includes(key);
                           const count = counts[key] || 0;
+                          
                           return (
-                            <div key={key} onClick={() => toggleCardSelection(key)} className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${isSelected ? 'bg-red-100 border-red-400' : 'bg-white border-gray-200 hover:border-purple-300'}`}>
+                            <div
+                              key={key}
+                              onClick={() => toggleCardSelection(key)}
+                              className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${isSelected ? 'bg-red-100 border-red-400' : 'bg-white border-gray-200 hover:border-purple-300'}`}
+                            >
                               <div className="flex items-center gap-3">
                                 <div className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}>
                                   {isSelected && <span className="text-white text-sm">✓</span>}
@@ -1421,6 +1546,7 @@ A01 고린도후서 5:17 그런즉 누구든지...
                         })}
                       </div>
                     </div>
+
                     <div className="p-6 border-t flex-shrink-0">
                       <div className="flex gap-3">
                         <button onClick={() => { setShowMultiDeleteModal(false); setSelectedForDelete([]); }} className="flex-1 p-3 bg-gray-300 text-gray-700 rounded-xl font-bold">취소</button>
